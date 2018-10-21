@@ -18,20 +18,21 @@ app.use(express.static(publicPath));
 io.on("connection", (socket)=> {
   console.log("New user connected");
 
-  socket.emit("newEmail", {
-    from: "wkw@example.com",
-    text: "Latest newsletter update",
-    createdAt: 123
-  });
-
-  socket.emit("newMessage", {
-    from: "wkw",
-    text: "Can we meet at 6pm later?",
-    createdAt: 123
-  });
+  //"socket.emit" emit event to single connection
+  // socket.emit("newMessage", {
+  //   from: "wkw",
+  //   text: "Can we meet at 6pm later?",
+  //   createdAt: 123
+  // });
 
   socket.on("createMessage", (message) => {
-    console.log("createMessage", message);
+    // console.log("createMessage", message);
+    //emit event to every connection
+    io.emit("newMessage", {
+      from: message.from,
+      text: message.text,
+      createdAt: new Date().getTime()
+    });
   });
 
   // socket.on("createEmail", (newEmail) => {
