@@ -15,7 +15,7 @@ var io = socketIO(server);
 app.use(express.static(publicPath));
 
 
-io.on("connection", (socket)=> {
+io.on("connection", (socket) => {
   console.log("New user connected");
 
   //"socket.emit" emit event to single connection
@@ -25,25 +25,45 @@ io.on("connection", (socket)=> {
   //   createdAt: 123
   // });
 
+  socket.emit("newMessage", {
+    from: "Admin",
+    text: "Welcome to the chat app",
+    createdAt: new Date().getTime()
+  });
+
+  socket.broadcast.emit("newMessage", {
+    from: "Admin",
+    text: "New user joined",
+    createdAt: new Date().getTime()
+  });
+
   socket.on("createMessage", (message) => {
-    // console.log("createMessage", message);
+    console.log("createMessage", message);
+
     //emit event to every connection
     io.emit("newMessage", {
       from: message.from,
       text: message.text,
       createdAt: new Date().getTime()
     });
+
+    
+    // socket.broadcast.emit("newMessage", {
+    //   from: message.from,
+    //   text: message.text,
+    //   createdAt: new Date().getTime()
+    // });
   });
 
   // socket.on("createEmail", (newEmail) => {
   //   console.log("createEmail", newEmail);
   // });
 
-  socket.on("disconnect", ()=> {
+  socket.on("disconnect", () => {
     console.log("User disconnected")
   });
 });
 
-server.listen(port, ()=> {
- console.log(`Server up on port: ${port}`);
+server.listen(port, () => {
+  console.log(`Server up on port: ${port}`);
 });
