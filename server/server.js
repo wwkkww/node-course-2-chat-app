@@ -3,7 +3,7 @@ const http = require("http");
 const express = require("express");
 const socketIO = require("socket.io");
 
-const {generateMessage} = require("./utils/message");
+const {generateMessage, generateLocationMessage} = require("./utils/message");
 const publicPath = path.join(__dirname, "../public");
 // console.log(__dirname + "/../public");
 console.log(publicPath);
@@ -32,7 +32,7 @@ io.on("connection", (socket) => {
 
   socket.on("createMessage", (message, callback) => {
     console.log("createMessage", message);
-    //emit event to every connected user connection
+    //server emit event to every connected client user
     io.emit("newMessage", generateMessage(message.from, message.text));
     callback("This is from the server");
     // socket.broadcast.emit("newMessage", {
@@ -42,9 +42,9 @@ io.on("connection", (socket) => {
     // });
   });
 
-  // socket.on("createEmail", (newEmail) => {
-  //   console.log("createEmail", newEmail);
-  // });
+  socket.on("createLocationMessage", (coords) => {
+    io.emit("newLocationMessage", generateLocationMessage("Admin", coords.latitude, coords.longitude));
+  });
 
   socket.on("disconnect", () => {
     console.log("User disconnected")
