@@ -35,6 +35,15 @@ class Users {
 
     return namesArray;
   }
+  userNameExist(name, room) {
+    var users = this.users.filter((user) => user.room === room);
+    // console.log("users", users);
+    const index = users.findIndex(function (user, index) {
+      return user.name.trim().toLowerCase() === name;
+    });
+    // console.log("index", index);
+    return index;
+  }
 }
 
 module.exports = { Users };
