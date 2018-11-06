@@ -30,7 +30,7 @@ io.on("connection", (socket) => {
     var roomName = params.room.toLowerCase();
     var userName = params.name.trim().toLowerCase();
     var userExist = users.userNameExist(userName, roomName);
-    if(userExist >= 0) {
+    if(userExist > -1) {
       return callback("Name taken. Please try with different name.");
     }
 
@@ -44,7 +44,12 @@ io.on("connection", (socket) => {
     //socket.emit (emit event specific to one user)
     socket.emit("newMessage", generateMessage("Admin", "Welcome to the chat app"));
     socket.broadcast.to(roomName).emit("newMessage", generateMessage("Admin", `${params.name} has joined`));
-    callback()
+    // console.log(users.users);
+
+    const rooms = users.getRoomArray(users.users);
+    console.log("rooms", rooms);
+    callback();
+    
   });
 
   socket.on("createMessage", (message, callback) => {

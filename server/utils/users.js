@@ -44,6 +44,15 @@ class Users {
     // console.log("index", index);
     return index;
   }
+  getRoomArray(users) {
+    var arrRoom = [];
+    users.forEach(function (user) {
+      if (! arrRoom.includes(user.room)){
+        arrRoom.push(user.room);
+      }
+    });
+    return arrRoom;
+  };
 }
 
 module.exports = { Users };
